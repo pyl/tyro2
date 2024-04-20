@@ -1,8 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+
 
 function IndexPopup() {
   const [data, setData] = useState("")
   //todo: how to call browser APIs 
+
+  useEffect(() => {
+    console.log("yo")
+    chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+      if (tab.url && tab.url.includes("example.com")) {
+        await chrome.tabs.remove(tabId);
+      }
+    });
+  })
 
   return (
     <div
