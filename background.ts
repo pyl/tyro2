@@ -12,6 +12,11 @@ const handleMessage = (message, sender, sendResponse) => {
       // Return true to indicate you wish to send a response asynchronously
       return true;
     }
+    if (message.action === "openPopup") {
+        console.log("opening popup")
+        chrome.action.openPopup()
+        return true;
+    }
 }
 
 const parseTitle = (message, sender, sendResponse) => {

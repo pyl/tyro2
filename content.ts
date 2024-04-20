@@ -26,3 +26,9 @@ if (window.location.hostname.includes("youtube.com")) {
       console.log("Request sent to close the tab", response);
   });
 }
+
+
+console.log("sending message to open popup")
+  chrome.runtime.sendMessage({ action: "openPopup" }, response => {
+      console.log("Request sent to open popup", response);
+  });
