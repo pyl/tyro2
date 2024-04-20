@@ -3,7 +3,7 @@ import { tokenizeTitle } from "./tokenize/tokenizer";
 export {}
 
 // Checks if the tabs should be closed or not
-function handleMessage(message, sender, sendResponse) {
+const handleMessage = (message, sender, sendResponse) => {
     if (message.action === "closeTab" && sender.tab?.id) {
       chrome.tabs.remove(sender.tab.id, () => {
         console.log(`Closed tab with ID: ${sender.tab.id}`);
@@ -14,7 +14,7 @@ function handleMessage(message, sender, sendResponse) {
     }
 }
 
-function parseTitle(message, sender, sendResponse) {
+const parseTitle = (message, sender, sendResponse) => {
     if (message.action === "tokenizeTitle" && message.title) {
         const tokens = tokenizeTitle(message.title); 
         console.log("Tokenized title:", tokens);
@@ -23,8 +23,29 @@ function parseTitle(message, sender, sendResponse) {
     }
 }
 
+const BACKEND_PATH = process.env.PLASMO_PUBLIC_BACKEND_PATH + "classify"
+
+// Send an API request to Flask Backend to determine if the classification matches
+// the productivity goal
+const fetchClassification = ((message, sender, sendResponse) => {
+    if (message.action === "classifyActivity") {
+      fetch(BACKEND_PATH, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({activity_description: message.description, goal: message.goal})
+      })
+      .then(response => response.json())
+      .then(data => sendResponse({isProductive: data.is_productive}))
+      .catch(error => console.error('Error:', error));
+      return true; // indicates that the response is sent asynchronously
+    }
+  });
+
 chrome.runtime.onMessage.addListener(handleMessage);
 chrome.runtime.onMessage.addListener(parseTitle)
+chrome.runtime.onMessage.addListener(fetchClassification)
 
 
 async function getCurrentTab() {

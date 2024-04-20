@@ -8,7 +8,17 @@ console.log(searchTitle)
 // Parse the url into tokens into a list of tokens
 chrome.runtime.sendMessage({action: "tokenizeTitle", title: searchTitle}, response => {
   console.log("Request to tokenize title sent", response)
+
+  const tokens = response.tokens.join(" "); // Join tokens for the description
+  classifyActivity(tokens, "get better at crochet");
 })
+
+// Send a message to background.ts for to classify your goal
+const classifyActivity = (description, goal) => {
+  chrome.runtime.sendMessage({action: "classifyActivity", description: description, goal: goal}, response => {
+    console.log("Classification result:", response);
+  });
+}
 
 // Send a request to close a specific tab
 if (window.location.hostname.includes("youtube.com")) {
