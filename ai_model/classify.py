@@ -16,6 +16,7 @@ def classify_activity(activity_description, goal):
             }
         ],
         model="gpt-3.5-turbo",
+        max_tokens=50
     )
     
     return True if chat_completion.choices[0].message.content.strip() == "Yes" else False

@@ -1,13 +1,9 @@
-// import { PlasmoBackground } from "plasmo";
+import { tokenizeTitle } from "./tokenize/tokenizer";
 
-// @PlasmoBackground({
-//   permissions: ["tabs"]
-// })
 export {}
 
-
+// Checks if the tabs should be closed or not
 function handleMessage(message, sender, sendResponse) {
-    console.log("Are we here")
     if (message.action === "closeTab" && sender.tab?.id) {
       chrome.tabs.remove(sender.tab.id, () => {
         console.log(`Closed tab with ID: ${sender.tab.id}`);
@@ -18,7 +14,18 @@ function handleMessage(message, sender, sendResponse) {
     }
 }
 
+function parseTitle(message, sender, sendResponse) {
+    if (message.action === "tokenizeTitle" && message.title) {
+        const tokens = tokenizeTitle(message.title); 
+        console.log("Tokenized title:", tokens);
+        sendResponse({ status: "Title tokenized", tokens: tokens });
+        return true; // Return true for asynchronous response
+    }
+}
+
 chrome.runtime.onMessage.addListener(handleMessage);
+chrome.runtime.onMessage.addListener(parseTitle)
+
 
 async function getCurrentTab() {
     console.log("Fetching current tab")
@@ -47,48 +54,3 @@ setInterval(() => {
         console.error("Could not find url", err)
     })
 }, 1000)
-
-// export class ExtensionBackground{
-//     constructor() {
-//         chrome.runtime.onMessage.addListener(this.handleMessage);
-//     }
-
-//     handleMessage = (message, sender, sendResponse) => {
-//         if (message.action === "closeTab" && sender.tab?.id) {
-//           chrome.tabs.remove(sender.tab.id, () => {
-//             console.log(`Closed tab with ID: ${sender.tab.id}`);
-//             sendResponse({ status: "Tab closed" });
-//           });
-//           // Return true to indicate you wish to send a response asynchronously
-//           return true;
-//         }
-//     }
-
-//     async function getCurrentTab() {
-//         console.log("yo3")
-//         let queryOptions = { active: true, lastFocusedWindow: true };
-//         // `tab` will either be a `tabs.Tab` instance or `undefined`.
-//         let [tab] = await chrome.tabs.query(queryOptions);
-//         console.log("yo4")
-//         return tab;
-//     }
-
-//     monitorTabs = () => {
-//         this.getCurrentTab().then((tab) => {
-//             // console.log("TAB")
-//             console.log(tab)
-//             console.log(tab["url"], "tab url")
-//         })
-//         setInterval(() => {
-//             getCurrentTab().then((tab) => {
-//                 // console.log("TAB")
-//                 // console.log(tab)
-//                 console.log(tab["url"], "tab url")
-//             }).catch((err) => {
-//                 console.error("Could not find url", err)
-//             })
-//         }, 1000)
-//     }
-// }
-// const bg = new ExtensionBackground();
-// bg.monitorTabs();
