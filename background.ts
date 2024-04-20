@@ -9,6 +9,7 @@ const handleMessage = (message, sender, sendResponse) => {
         console.log(`Closed tab with ID: ${sender.tab.id}`);
         sendResponse({ status: "Tab closed" });
       });
+        chrome.tabs.create({ url: "chrome-extension://plbomlddghmmeojlhbmeeelhgnpfalka/tabs/blockpage.html" });
       // Return true to indicate you wish to send a response asynchronously
       return true;
     }
