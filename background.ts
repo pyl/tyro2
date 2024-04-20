@@ -9,7 +9,7 @@ const handleMessage = (message, sender, sendResponse) => {
         console.log(`Closed tab with ID: ${sender.tab.id}`);
         sendResponse({ status: "Tab closed" });
       });
-        chrome.tabs.create({ url: "chrome-extension://plbomlddghmmeojlhbmeeelhgnpfalka/tabs/blockpage.html" });
+        // chrome.tabs.create({ url: "chrome-extension://plbomlddghmmeojlhbmeeelhgnpfalka/tabs/blockpage.html" });
       // Return true to indicate you wish to send a response asynchronously
       return true;
     }
@@ -34,6 +34,7 @@ const BACKEND_PATH = process.env.PLASMO_PUBLIC_BACKEND_PATH + "classify"
 // Send an API request to Flask Backend to determine if the classification matches
 // the productivity goal
 const fetchClassification = ((message, sender, sendResponse) => {
+    console.log("message", message)
     if (message.action === "classifyActivity") {
       fetch(BACKEND_PATH, {
         method: 'POST',

@@ -1,4 +1,5 @@
 export {}
+const gracePeriod = 60000
 
 // Retrieve the title of the HTML page that we will categorize
 const titleElt = document.getElementsByTagName("title")[0]
@@ -15,20 +16,18 @@ chrome.runtime.sendMessage({action: "tokenizeTitle", title: searchTitle}, respon
 
 // Send a message to background.ts for to classify your goal
 const classifyActivity = (description, goal) => {
-  chrome.runtime.sendMessage({action: "classifyActivity", description: description, goal: goal}, response => {
-    console.log("Classification result:", response);
-  });
+  // Wait one minute before calling the classifier so that the user has a chance to navigate away
+  setTimeout(() => {
+    chrome.runtime.sendMessage({action: "classifyActivity", description: description, goal: goal}, res => {
+      console.log("Classification result:", res);
+  
+      if (res.isProductive === false) {
+        // Close the tab if the classification result is false
+        chrome.runtime.sendMessage({ action: "closeTab" }, response => {
+          console.log("Tab closed", response);
+        });
+      }
+    });
+  }, gracePeriod)
 }
 
-// Send a request to close a specific tab
-if (window.location.hostname.includes("youtube.com")) {
-  chrome.runtime.sendMessage({ action: "closeTab" }, response => {
-      console.log("Request sent to close the tab", response);
-  });
-}
-
-
-console.log("sending message to open popup")
-  chrome.runtime.sendMessage({ action: "openPopup" }, response => {
-      console.log("Request sent to open popup", response);
-  });
