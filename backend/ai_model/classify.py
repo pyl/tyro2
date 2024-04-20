@@ -20,8 +20,3 @@ def classify_activity(activity_description, goal):
     )
     
     return True if chat_completion.choices[0].message.content.strip() == "Yes" else False
-
-# activity_description = "Dumbell fly tutorial"
-# goal = "Getting stronger at the gym"
-# classification = classify_activity(activity_description, goal)
-# print(classification)

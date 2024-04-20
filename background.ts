@@ -5,13 +5,13 @@ export {}
 // Checks if the tabs should be closed or not
 const handleMessage = (message, sender, sendResponse) => {
     if (message.action === "closeTab" && sender.tab?.id) {
-      chrome.tabs.remove(sender.tab.id, () => {
-        console.log(`Closed tab with ID: ${sender.tab.id}`);
-        sendResponse({ status: "Tab closed" });
-      });
-        // chrome.tabs.create({ url: "chrome-extension://plbomlddghmmeojlhbmeeelhgnpfalka/tabs/blockpage.html" });
-      // Return true to indicate you wish to send a response asynchronously
-      return true;
+        chrome.tabs.remove(sender.tab.id, () => {
+            console.log(`Closed tab with ID: ${sender.tab.id}`);
+            sendResponse({ status: "Tab closed" });
+        });
+        chrome.tabs.create({ url: "chrome-extension://plbomlddghmmeojlhbmeeelhgnpfalka/tabs/blockpage.html" });
+        // Return true to indicate you wish to send a response asynchronously
+        return true;
     }
     if (message.action === "openPopup") {
         console.log("opening popup")

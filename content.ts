@@ -1,5 +1,5 @@
 export {}
-const gracePeriod = 60000
+const gracePeriod = 20000
 
 // Retrieve the title of the HTML page that we will categorize
 const titleElt = document.getElementsByTagName("title")[0]
@@ -16,7 +16,7 @@ chrome.runtime.sendMessage({action: "tokenizeTitle", title: searchTitle}, respon
 
 // Send a message to background.ts for to classify your goal
 const classifyActivity = (description, goal) => {
-  // Wait one minute before calling the classifier so that the user has a chance to navigate away
+  // Wait 20 seconds before calling the classifier so that the user has a chance to navigate away
   setTimeout(() => {
     chrome.runtime.sendMessage({action: "classifyActivity", description: description, goal: goal}, res => {
       console.log("Classification result:", res);
