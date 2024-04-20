@@ -2,6 +2,7 @@ import { useState } from "react"
 
 function IndexPopup() {
   const [data, setData] = useState("")
+  //todo: how to call browser APIs 
 
   return (
     <div
@@ -9,9 +10,10 @@ function IndexPopup() {
         padding: 16
       }}>
       <h2>
+      
         Welcome to your{" "}
         <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
+          Plasmo sis!!!
         </a>{" "}
         Extension!
       </h2>
