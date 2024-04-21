@@ -73,6 +73,11 @@ body::before {
     z-index: 2;
 }
 
+.start:hover {
+    transform: scale(1.05);
+    transition: 0.5s;
+}
+
 .bottomDiv{
     width: 100%;
     display: flex;
