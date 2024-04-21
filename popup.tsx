@@ -26,7 +26,7 @@ function IndexPopup() {
         Let's Get Started
       </button>
       <div className={styles.bottomDiv}>
-        <a href="https://docs.plasmo.com" target="_blank">
+        <a href="https://github.com/pyl/tyro2" target="_blank">
           About
         </a>
       </div>
