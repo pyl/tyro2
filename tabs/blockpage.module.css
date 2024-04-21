@@ -1,0 +1,44 @@
+.container {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imageContainer {
+    position: relative;
+    width: 100px; /* Set according to your image size */
+    height: 100px; /* Set according to your image size */
+    animation: slideIn 1s forwards;
+    right: -100%; /* Start from outside of the view */
+}
+
+@keyframes slideIn {
+from {
+    right: -100%;
+}
+to {
+    right: 50%; /* Adjust if needed to center the image */
+}
+}
+
+.speechBubble {
+    position: absolute;
+    width: 10vw; 
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    top: 50%; /* Adjust based on where you want it relative to the image */
+    left: 200%; /* Center horizontally relative to the parent container */
+    transform: translateX(-50%); /* Center the speech bubble */
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
