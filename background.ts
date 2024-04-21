@@ -1,9 +1,29 @@
 import { tokenizeTitle } from "./tokenize/tokenizer";
 
 export {}
+let goal = ""
+
+// Takes the goal from the input and stores it into the background
+
+const storeGoal = (message, sender, sendResponse) => {
+    if (message.action === "sendGoal") {
+      goal = message.goal;
+      console.log("Received goal:", goal);
+    }
+};
+
+const getGoal = (message, sender, sendResponse) => {
+    if (message.action == "retrieveMessage") {
+        sendResponse({ result: goal})
+    }
+};
 
 // Checks if the tabs should be closed or not
 const handleMessage = (message, sender, sendResponse) => {
+
+    // If the the message is closing a tab, we will use the Chrome API to
+    // remove the tab and instantiate a new chrome tab showing that it was
+    // blocked.
     if (message.action === "closeTab" && sender.tab?.id) {
         chrome.tabs.remove(sender.tab.id, () => {
             console.log(`Closed tab with ID: ${sender.tab.id}`);
@@ -14,12 +34,12 @@ const handleMessage = (message, sender, sendResponse) => {
         return true;
     }
     if (message.action === "openPopup") {
-        console.log("opening popup")
         chrome.action.openPopup()
         return true;
     }
 }
 
+// Function to return the title in a sequence of tokens back to content
 const parseTitle = (message, sender, sendResponse) => {
     if (message.action === "tokenizeTitle" && message.title) {
         const tokens = tokenizeTitle(message.title); 
@@ -50,35 +70,9 @@ const fetchClassification = ((message, sender, sendResponse) => {
     }
   });
 
+// List of chrome runtime listeners
+chrome.runtime.onMessage.addListener(storeGoal)
+chrome.runtime.onMessage.addListener(getGoal)
 chrome.runtime.onMessage.addListener(handleMessage);
 chrome.runtime.onMessage.addListener(parseTitle)
 chrome.runtime.onMessage.addListener(fetchClassification)
-
-
-async function getCurrentTab() {
-    console.log("Fetching current tab")
-    let queryOptions = { active: true, lastFocusedWindow: true };
-    // `tab` will either be a `tabs.Tab` instance or `undefined`.
-    let [tab] = await chrome.tabs.query(queryOptions);
-    if (!tab) {
-        console.error("No tab found!")
-        return
-    }
-    console.log("Tab url", tab.url)
-    return tab;
-}
-
-getCurrentTab().then((tab) => {
-    // console.log("TAB")
-    console.log(tab["url"], "tab url")
-})
-
-setInterval(() => {
-    getCurrentTab().then((tab) => {
-        // console.log("TAB")
-        // console.log(tab)
-        console.log(tab["url"], "tab url")
-    }).catch((err) => {
-        console.error("Could not find url", err)
-    })
-}, 1000)

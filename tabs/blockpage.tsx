@@ -4,7 +4,6 @@ function DeltaFlyerPage() {
       style={{
         display: "flex",
         flexDirection: "column",
-        padding: 16
       }}>
       <h2>Delta Flyer Tab</h2>
  
